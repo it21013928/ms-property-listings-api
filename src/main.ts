@@ -26,7 +26,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config));
 
-  await app.listen(3000);
+  await app.listen(5000);
 
   Logger.log(`Application is running on: ${await app.getUrl()}`);
 }
