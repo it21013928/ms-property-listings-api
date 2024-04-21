@@ -1,0 +1,20 @@
+name: CICD
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build docker image
+        run: docker build -t kithminasiriwardana13/ms-property-listings-api .
+      - name: Publish image to docker hub
+        run: docker push kithminasiriwardana13/ms-property-listings-api:latest
