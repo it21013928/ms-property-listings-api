@@ -21,7 +21,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: [ms-property-listings-api-production-server-aws-ec2]
     steps:
       - name: Pull image from docker hub
         run: docker pull kithminasiriwardana13/ms-property-listings-api:latest
