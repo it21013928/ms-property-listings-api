@@ -21,7 +21,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('CTSE Assignment 2')
     .setDescription('Base template for NestJS property listings core component')
-    .setVersion('1.0.0')
+    .setVersion('1.0.1')
     .build();
 
   SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config));
