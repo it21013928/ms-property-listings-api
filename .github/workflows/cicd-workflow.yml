@@ -19,13 +19,13 @@ jobs:
       - name: Publish image to docker hub
         run: docker push kithminasiriwardana13/ms-property-listings-api:latest
 
-deploy:
-  needs: build
-  runs-on: [ms-property-listings-api-production-server-aws-ec2]
-  steps:
-    - name: Pull image from docker hub
-      run: docker pull kithminasiriwardana13/ms-property-listings-api:latest
-    - name: Delete old container
-      run: docker rm -f ms-property-listings-api-container
-    - name: Run docker container
-      run: docker run -d -p 5000:5000 --name ms-property-listings-api-container kithminasiriwardana13/ms-property-listings-api
+  deploy:
+    needs: build
+    runs-on: [ms-property-listings-api-production-server-aws-ec2]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull kithminasiriwardana13/ms-property-listings-api:latest
+      - name: Delete old container
+        run: docker rm -f ms-property-listings-api-container
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name ms-property-listings-api-container kithminasiriwardana13/ms-property-listings-api
