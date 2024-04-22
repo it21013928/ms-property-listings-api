@@ -36,6 +36,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
+    environment: ms-property-listings-api-production-environment 
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout source
