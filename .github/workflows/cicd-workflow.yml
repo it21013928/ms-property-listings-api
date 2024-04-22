@@ -37,11 +37,11 @@ jobs:
 
   build:
     runs-on: [ubuntu-latest]
-    env:
-      DATABASE_CONNECTION_STRING: ${{ secrets.DATABASE_CONNECTION_STRING }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+      - name: Create environment file (.env)
+        run: echo "DATABASE_CONNECTION_STRING=${{ secrets.DATABASE_CONNECTION_STRING }}" >> .env
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build docker image
