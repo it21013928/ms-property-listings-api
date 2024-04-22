@@ -18,7 +18,7 @@ describe('PropertyController', () => {
     moduleRef = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(
-          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
+          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_test_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
         ),
         MongooseModule.forFeature([
           { name: Property.name, schema: PropertySchema },
@@ -36,35 +36,6 @@ describe('PropertyController', () => {
   beforeAll(async () => {
     await initializeModel();
   });
-
-  // beforeAll(async () => {
-  //   const module: TestingModule = await Test.createTestingModule({
-  //     imports: [
-  //       MongooseModule.forRoot(
-  //         'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
-  //       ),
-  //       MongooseModule.forFeature([
-  //         { name: Property.name, schema: PropertySchema },
-  //       ]),
-  //     ],
-  //     controllers: [PropertyController],
-  //     providers: [PropertyService],
-  //   }).compile();
-
-  //   controller = module.get<PropertyController>(PropertyController);
-  //   service = module.get<PropertyService>(PropertyService);
-  //   model = module.get<Model<Property>>(getModelToken(Property.name));
-
-  //   // Wait until the model is initialized
-  //   await waitForModelInitialization();
-  // });
-
-  async function waitForModelInitialization() {
-    // Check if model is initialized, wait until it is
-    while (!model) {
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for 100ms
-    }
-  }
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
@@ -98,14 +69,14 @@ describe('PropertyController', () => {
     const properties = await model.find().exec();
     expect(properties).toHaveLength(1);
     expect(properties[0]).toMatchObject(createPropertyDto);
-  });
+  }, 10000);
 
   // Test findAll
   it('should find all properties', async () => {
     await initializeModel();
     const properties = await controller.findAll();
     expect(properties).toHaveLength(1); // Assuming one property is created in the previous test
-  });
+  }, 10000);
 
   // Test findOne
   it('should find one property by id', async () => {
@@ -118,7 +89,7 @@ describe('PropertyController', () => {
 
     expect(property).toBeDefined();
     expect(property?._id).toEqual(propertyId);
-  });
+  }, 10000);
 
   //Test update
   it('should update a property', async () => {
@@ -144,7 +115,7 @@ describe('PropertyController', () => {
 
     expect(updatedProperty).toBeDefined();
     expect(updatedProperty?.title).toEqual(updatePropertyDto.title);
-  });
+  }, 10000);
 
   //Test delete
   it('should delete a property', async () => {
@@ -158,5 +129,5 @@ describe('PropertyController', () => {
     const propertiesAfterDelete = await model.find().exec();
 
     expect(propertiesAfterDelete).toHaveLength(0);
-  });
+  }, 10000);
 });

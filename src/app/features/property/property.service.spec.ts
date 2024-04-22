@@ -13,7 +13,7 @@ describe('PropertyService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(
-          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
+          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_test_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
         ),
         MongooseModule.forFeature([
           { name: Property.name, schema: PropertySchema },
