@@ -14,7 +14,7 @@ describe('PropertyService', () => {
       imports: [
         MongooseModule.forRoot(
           'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
-        ), // Use a test database URI
+        ),
         MongooseModule.forFeature([
           { name: Property.name, schema: PropertySchema },
         ]),
