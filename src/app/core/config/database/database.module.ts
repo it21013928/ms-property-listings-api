@@ -2,9 +2,6 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-// **Security Note:** Avoid printing the full connection string in the console.
-// Consider logging it at a lower level (e.g., debug) for troubleshooting purposes only.
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
