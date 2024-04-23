@@ -7,6 +7,7 @@ import { PropertySchema } from './entities/property.entity';
 import { Model } from 'mongoose';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('PropertyController', () => {
   let controller: PropertyController;
@@ -17,9 +18,17 @@ describe('PropertyController', () => {
   const initializeModel = async () => {
     moduleRef = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot(
-          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_test_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
-        ),
+        ConfigModule.forRoot({ isGlobal: true }),
+        MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (config: ConfigService) => {
+            const connectionString = config.get<string>('TEST_DATABASE_CONNECTION_STRING');
+            return {
+              uri: connectionString,
+            };
+          },
+        }),
         MongooseModule.forFeature([
           { name: Property.name, schema: PropertySchema },
         ]),

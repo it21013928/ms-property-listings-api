@@ -45,6 +45,7 @@ jobs:
         run: |
           touch .env
           echo "DATABASE_CONNECTION_STRING=${{ secrets.DATABASE_CONNECTION_STRING }}" >> .env
+          echo "TEST_DATABASE_CONNECTION_STRING=${{ secrets.TEST_DATABASE_CONNECTION_STRING }}" >> .env
           cat .env
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}

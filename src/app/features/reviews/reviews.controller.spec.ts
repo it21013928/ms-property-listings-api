@@ -7,6 +7,7 @@ import { ReviewSchema } from './entities/review.entity';
 import { Model } from 'mongoose';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('ReviewsController', () => {
   let controller: ReviewsController;
@@ -17,9 +18,17 @@ describe('ReviewsController', () => {
   const initializeModel = async () => {
     moduleRef = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot(
-          'mongodb+srv://wudeshp:Hzr6TS8PtQBtSBJC@propertyrentalplatformc.l46okbo.mongodb.net/property_rental_platform_test_db?retryWrites=true&w=majority&appName=PropertyRentalPlatformCluster',
-        ),
+        ConfigModule.forRoot({ isGlobal: true }),
+        MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (config: ConfigService) => {
+            const connectionString = config.get<string>('TEST_DATABASE_CONNECTION_STRING');
+            return {
+              uri: connectionString,
+            };
+          },
+        }),
         MongooseModule.forFeature([
           { name: Review.name, schema: ReviewSchema },
         ]),
