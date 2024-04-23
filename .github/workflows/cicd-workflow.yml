@@ -1,0 +1,70 @@
+name: CICD
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    name: Test
+    if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+
+  sonarcloud:
+    name: SonarCloud
+    if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    environment: ms-property-listings-api-production-environment 
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Create environment file (.env)
+        run: |
+          touch .env
+          echo "DATABASE_CONNECTION_STRING=${{ secrets.DATABASE_CONNECTION_STRING }}" >> .env
+          echo "TEST_DATABASE_CONNECTION_STRING=${{ secrets.TEST_DATABASE_CONNECTION_STRING }}" >> .env
+          cat .env
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build docker image
+        run: docker build -t kithminasiriwardana13/ms-property-listings-api .
+      - name: Publish image to docker hub
+        run: docker push kithminasiriwardana13/ms-property-listings-api:latest
+
+  deploy:
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull kithminasiriwardana13/ms-property-listings-api:latest
+      - name: Delete old container
+        run: docker rm -f ms-property-listings-api-container
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name ms-property-listings-api-container kithminasiriwardana13/ms-property-listings-api

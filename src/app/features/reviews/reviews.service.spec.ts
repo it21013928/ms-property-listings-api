@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PropertyController } from './property.controller';
-import { PropertyService } from './property.service';
-import { Property } from './entities/property.entity';
+import { ReviewsController } from './reviews.controller';
+import { ReviewsService } from './reviews.service';
+import { Review } from './entities/review.entity';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PropertySchema } from './entities/property.entity';
+import { ReviewSchema } from './entities/review.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-describe('PropertyService', () => {
-  let propertyController: PropertyController;
+describe('ReviewsService', () => {
+  let reviewsController: ReviewsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,17 +24,17 @@ describe('PropertyService', () => {
           },
         }),
         MongooseModule.forFeature([
-          { name: Property.name, schema: PropertySchema },
+          { name: Review.name, schema: ReviewSchema },
         ]),
       ],
-      controllers: [PropertyController],
-      providers: [PropertyService],
+      controllers: [ReviewsController],
+      providers: [ReviewsService],
     }).compile();
 
-    propertyController = module.get<PropertyController>(PropertyController);
+    reviewsController = module.get<ReviewsController>(ReviewsController);
   });
 
   it('should be defined', () => {
-    expect(propertyController).toBeDefined();
+    expect(reviewsController).toBeDefined();
   });
 });
