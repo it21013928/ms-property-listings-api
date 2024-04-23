@@ -10,6 +10,7 @@ jobs:
   test:
     name: Test
     if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
+    environment: ms-property-listings-api-production-environment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -38,7 +39,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     environment: ms-property-listings-api-production-environment 
     runs-on: [ubuntu-latest]
     steps:
@@ -58,7 +59,7 @@ jobs:
         run: docker push kithminasiriwardana13/ms-property-listings-api:latest
 
   deploy:
-    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     needs: build
     runs-on: self-hosted
     steps:
