@@ -10,11 +10,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const connectionString = config.get<string>('DATABASE_CONNECTION_STRING');
-
-        // **Optional: Log connection string details (masked)**
-        const maskedConnectionString = connectionString.replace(/^(.*)@(.*):(.*)@(.*)\/(.*)$/, 'mongodb://$1@...');
-        console.debug(`Connecting to MongoDB with masked URI: ${maskedConnectionString}`);
-
         return {
           uri: connectionString,
         };

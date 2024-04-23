@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     name: Test
+    if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -24,6 +25,7 @@ jobs:
 
   sonarcloud:
     name: SonarCloud
+    if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +38,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
     environment: ms-property-listings-api-production-environment 
     runs-on: [ubuntu-latest]
     steps:
@@ -45,6 +48,7 @@ jobs:
         run: |
           touch .env
           echo "DATABASE_CONNECTION_STRING=${{ secrets.DATABASE_CONNECTION_STRING }}" >> .env
+          echo "TEST_DATABASE_CONNECTION_STRING=${{ secrets.TEST_DATABASE_CONNECTION_STRING }}" >> .env
           cat .env
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -54,6 +58,7 @@ jobs:
         run: docker push kithminasiriwardana13/ms-property-listings-api:latest
 
   deploy:
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
     needs: build
     runs-on: self-hosted
     steps:
