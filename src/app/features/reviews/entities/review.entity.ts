@@ -7,10 +7,13 @@ export class Review extends Document {
   propertyID: string;
 
   @Prop({ required: true })
+  customerReview: string;
+
+  @Prop({ required: true })
   customerID: string;
 
   @Prop()
   rate: number;
 }
 
-export const PropertySchema = SchemaFactory.createForClass(Review);
+export const ReviewSchema = SchemaFactory.createForClass(Review);

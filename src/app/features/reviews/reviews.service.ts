@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Review } from './entities/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 
 @Injectable()
 export class ReviewsService {
-  create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
+  constructor(
+    @InjectModel(Review.name) private readonly reviewModel: Model<Review>,
+  ) {}
+
+  async create(createReviewDto: CreateReviewDto): Promise<Review> {
+    const createdReview = new this.reviewModel(createReviewDto);
+    return await createdReview.save();
   }
 
-  findAll() {
-    return `This action returns all reviews`;
+  async findAll(): Promise<Review[]> {
+    return await this.reviewModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} review`;
+  async findOne(id: string): Promise<Review> {
+    return await this.reviewModel.findById(id).exec();
   }
 
-  update(id: number, updateReviewDto: UpdateReviewDto) {
-    return `This action updates a #${id} review`;
+  async update(id: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
+    return await this.reviewModel
+      .findByIdAndUpdate(id, updateReviewDto, { new: true })
+      .exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} review`;
+  async remove(id: string): Promise<Review> {
+    return await this.reviewModel.findOneAndDelete({ _id: id }).exec();
   }
 }
